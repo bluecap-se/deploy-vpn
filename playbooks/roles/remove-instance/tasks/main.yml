@@ -1,0 +1,25 @@
+---
+
+# Remove instance
+
+- name: Get Droplet ID
+  shell: doctl compute droplet list --format ID --no-header
+  register: droplet_id
+
+- name: Get firewall ID
+  shell: >
+    doctl compute firewall list-by-droplet {{ droplet_id.stdout }}
+    --format ID --no-header
+  register: firewall_id
+
+- name: Remove firewall
+  expect:
+    command: doctl compute firewall delete {{ firewall_id.stdout }}
+    responses:
+      (?i)sure: "y"
+
+- name: Remove Droplet
+  expect:
+    command: doctl compute droplet delete {{ droplet_id.stdout }}
+    responses:
+      (?i)sure: "y"

@@ -1,0 +1,40 @@
+---
+
+# Secure instance and add user
+
+- name: Update cache
+  apt:
+    update_cache: yes
+- name: Upgrade installed packages
+  apt:
+    upgrade: full
+- name: Install essential packages
+  apt:
+    name:
+      - python3-apt
+      - python3-pip
+      - fail2ban
+    state: latest
+- name: Update fail2ban config
+  template:
+    src: files/fail2ban.jail.local
+    dest: /etc/fail2ban/jail.local
+    owner: bin
+    group: root
+    mode: 0644
+- name: Restart service fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+- name: Add the user 'ovpn'
+  user:
+    name: ovpn
+    password: $6$098fdg8273$edU/5jijTZFzfcb6jUZABs0/0./i0GqYSI/HQLDYET8T4XVYWySopgGDqGCkHuiwoY8RXAmR38OiS0gU5btX7.
+    shell: /bin/bash
+- name: Set user as sudoer
+  shell: usermod -aG sudo ovpn
+- name: Add public ssh key to user
+  authorized_key:
+    user: ovpn
+    state: present
+    key: https://github.com/bluecap-se.keys

@@ -1,0 +1,18 @@
+---
+- name: Change SSH port on instance
+  hosts: servers
+  remote_user: root
+  become: True
+
+  roles:
+    - role: update-ssh-port
+      tags: [ 'ssh' ]
+
+
+- name: Update firewall
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: update-firewall
+      tags: [ 'firewall' ]

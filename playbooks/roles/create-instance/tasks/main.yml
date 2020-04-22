@@ -1,0 +1,53 @@
+---
+
+# Create instance
+
+- name: Check for doctl installation
+  shell: which doctl >/dev/null 2>&1
+  register: doctl_check
+  ignore_errors: yes
+
+- name: Install doctl
+  command: brew install doctl
+  when: doctl_check.rc != 0
+
+- name: Authenticate doctl
+  expect:
+    command: doctl auth init --context Local
+    responses:
+      Token: "{{ do_secret_token }}"
+  when: doctl_check.rc != 0
+
+- name: Get SSH-key ID
+  shell: doctl compute ssh-key list --format ID --no-header
+  register: ssh_key_id
+
+- name: Create instance
+  command: >
+    doctl compute droplet create {{ droplet_name }}
+    --enable-monitoring
+    --image ubuntu-18-04-x64
+    --size s-1vcpu-1gb
+    --ssh-keys {{ ssh_key_id.stdout }}
+    --region tor1
+
+- name: Get Droplet ID
+  shell: doctl compute droplet list --format ID --no-header
+  register: droplet_id
+
+- name: Get Droplet IP
+  shell: doctl compute droplet list --format PublicIPv4 --no-header
+  register: droplet_ip
+
+- name: Create firewall
+  command: >
+    doctl compute firewall create
+    --name VPN
+    --droplet-ids {{ droplet_id.stdout }}
+    --inbound-rules "protocol:tcp,ports:69,address:0.0.0.0/0,address:::/0 protocol:tcp,ports:22,address:0.0.0.0/0,address:::/0 protocol:udp,ports:1194,address:0.0.0.0/0,address:::/0"
+    --outbound-rules "protocol:icmp,address:0.0.0.0/0,address:::/0 protocol:tcp,ports:all,address:0.0.0.0/0,address:::/0 protocol:udp,ports:all,address:0.0.0.0/0,address:::/0"
+
+- name: Next steps
+  debug:
+    msg:
+      - Update hosts file with IP {{ droplet_ip.stdout }}

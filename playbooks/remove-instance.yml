@@ -1,0 +1,9 @@
+---
+- name: Remove instance
+  gather_facts: false
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: remove-instance
+      tags: [ 'delete' ]

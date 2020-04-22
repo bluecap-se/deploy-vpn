@@ -1,0 +1,8 @@
+---
+
+- name: Download vpn config
+  hosts: localhost
+  connection: local
+
+  tasks:
+    -

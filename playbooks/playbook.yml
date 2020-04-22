@@ -1,0 +1,14 @@
+---
+
+- name: Prepare instance
+  hosts: servers
+  gather_facts: false
+  remote_user: root
+  become: True
+
+  roles:
+    - role: setup-instance
+      tags: [ 'setup' ]
+
+    - role: install-openvpn
+      tags: [ 'setup', 'vpn' ]

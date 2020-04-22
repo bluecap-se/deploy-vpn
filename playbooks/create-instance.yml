@@ -1,0 +1,9 @@
+---
+- name: Create instance
+  gather_facts: false
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: create-instance
+      tags: [ 'instance' ]

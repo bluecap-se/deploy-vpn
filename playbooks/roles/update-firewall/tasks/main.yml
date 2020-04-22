@@ -1,0 +1,18 @@
+---
+- name: Get Droplet ID
+  shell: doctl compute droplet list --format ID --no-header
+  register: droplet_id
+
+- name: Get firewall ID
+  shell: >
+    doctl compute firewall list-by-droplet {{ droplet_id.stdout }}
+    --format ID --no-header
+  register: firewall_id
+
+- name: Update firewall rules
+  command: >
+    doctl compute firewall update {{ firewall_id.stdout }}
+    --name VPN
+    --droplet-ids {{ droplet_id.stdout }}
+    --inbound-rules "protocol:tcp,ports:69,address:0.0.0.0/0,address:::/0 protocol:udp,ports:1194,address:0.0.0.0/0,address:::/0"
+    --outbound-rules "protocol:icmp,address:0.0.0.0/0,address:::/0 protocol:tcp,ports:all,address:0.0.0.0/0,address:::/0 protocol:udp,ports:all,address:0.0.0.0/0,address:::/0"

@@ -1,0 +1,8 @@
+localhost ansible_connection=local
+
+[servers]
+vpn ansible_host=CHANGE
+
+[servers:vars]
+ansible_port=69
+ansible_python_interpreter=python3

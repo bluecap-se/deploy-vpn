@@ -1,0 +1,22 @@
+---
+
+# Install OpenVPN
+
+- name: Install dependency
+  command: pip3 install pexpect
+
+- name: Download file
+  get_url:
+    url: https://raw.githubusercontent.com/Nyr/openvpn-install/master/openvpn-install.sh
+    dest: /tmp/openvpn-install.sh
+
+- name: Create client
+  expect:
+    command: bash /tmp/openvpn-install.sh
+    responses:
+      IPv4: 1
+      protocol: 1
+      listening: 1194
+      DNS: 1
+      name: client
+      any: a
