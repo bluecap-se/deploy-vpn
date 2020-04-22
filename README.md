@@ -17,7 +17,7 @@ Deploys a VPN server on DigitalOcean in less than 2 minutes.
 $ pipenv install && pipenv shell
 ```
 
-2. Generate a new API Token in [DigitalOcean](https://www.digitalocean.com/) and add it to the [vault](https://github.com/bluecap-se/deploy/blob/master/inventory/production/group_vars/secret/do.yml) as seen below and encrypt the vault.
+2. Generate a new API Token in [DigitalOcean](https://www.digitalocean.com/) and add it to the [vault](https://github.com/bluecap-se/deploy-vpn/blob/master/inventory/production/group_vars/all/secret/do.yml) as seen below and encrypt the vault.
 
 ```
 ---
