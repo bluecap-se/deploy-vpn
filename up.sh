@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create Droplet instance
-ansible-playbook -i inventory/production playbooks/create-instance.yml #--extra-vars="ansible_python_interpreter=python3"
+ansible-playbook -i inventory/production playbooks/create-instance.yml
 
 echo "Updating IP address..."
 IP=$(doctl compute droplet list --format PublicIPv4 --no-header)
@@ -9,7 +9,7 @@ sed -i '' "s/CHANGE/$IP/g" inventory/production/hosts
 
 # Wait for instance to finish
 echo "Waiting for instance to finish creating..."
-sleep 60s
+sleep 30s
 
 ansible-playbook -i inventory/production playbooks/pre-deploy.yml -e ansible_port=22
 

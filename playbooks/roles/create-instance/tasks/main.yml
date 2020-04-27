@@ -35,10 +35,6 @@
   shell: doctl compute droplet list --format ID --no-header
   register: droplet_id
 
-- name: Get Droplet IP
-  shell: doctl compute droplet list --format PublicIPv4 --no-header
-  register: droplet_ip
-
 - name: Create firewall
   command: >
     doctl compute firewall create
@@ -46,6 +42,13 @@
     --droplet-ids {{ droplet_id.stdout }}
     --inbound-rules "protocol:tcp,ports:69,address:0.0.0.0/0,address:::/0 protocol:tcp,ports:22,address:0.0.0.0/0,address:::/0 protocol:udp,ports:1194,address:0.0.0.0/0,address:::/0"
     --outbound-rules "protocol:icmp,address:0.0.0.0/0,address:::/0 protocol:tcp,ports:all,address:0.0.0.0/0,address:::/0 protocol:udp,ports:all,address:0.0.0.0/0,address:::/0"
+
+- name: Get Droplet IP
+  shell: doctl compute droplet list --format PublicIPv4 --no-header
+  register: droplet_ip
+  until: droplet_ip.stdout.find(".") != -1
+  retries: 3
+  delay: 10
 
 - name: Next steps
   debug:
