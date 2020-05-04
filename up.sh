@@ -9,7 +9,7 @@ sed -i '' "s/CHANGE/$IP/g" inventory/production/hosts
 
 # Wait for instance to finish
 echo "Waiting for instance to finish creating..."
-sleep 30s
+sleep 60s
 
 ansible-playbook -i inventory/production playbooks/pre-deploy.yml -e ansible_port=22
 
