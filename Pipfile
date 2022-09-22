@@ -6,8 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-ansible = "==2.9.10"
+ansible = "==6.4.0"
 pexpect = "==4.8.0"
 
 [requires]
-python_version = "3.8"
+python_version = "3.10"

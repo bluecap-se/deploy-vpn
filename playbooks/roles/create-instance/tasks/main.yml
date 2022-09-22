@@ -26,7 +26,7 @@
   command: >
     doctl compute droplet create {{ droplet_name }}
     --enable-monitoring
-    --image ubuntu-18-04-x64
+    --image ubuntu-22-04-x64
     --size s-1vcpu-1gb
     --ssh-keys {{ ssh_key_id.stdout }}
     --region tor1

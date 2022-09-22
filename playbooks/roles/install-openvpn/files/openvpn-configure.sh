@@ -16,7 +16,7 @@ send -- "\r"
 expect "DNS"
 send -- "\r"
 
-expect "Client name"
+expect "client"
 send -- "\r"
 
 expect "Press any key to continue..."
